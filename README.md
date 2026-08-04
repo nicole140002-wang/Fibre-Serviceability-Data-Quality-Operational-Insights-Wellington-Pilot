@@ -16,3 +16,13 @@
 <img width="1723" height="1259" alt="image" src="https://github.com/user-attachments/assets/917a75f2-6666-446d-8b0c-4b8c4b6d1695" />
 <img width="1075" height="1282" alt="image" src="https://github.com/user-attachments/assets/822376ab-b146-486e-bda2-a850f4b24f02" />
 
+# 2. 数据检查
+内容包括以下:
+Geometry类型	Polygon还是MultiPolygon —— 看起来Fibre Coverages块更大，是multipolygon；SFA Parcels是每一个小块，是polygon类型
+CRS	是否都是EPSG:2193 —— 都是 EPSG:2193 - NZGD2000 / New Zealand Transverse Mercator 2000
+Feature数量	了解数据规模 —— 光纤覆盖layer，数据量小，2008个，SFA块非常多1,683,966个面
+Provider字段	能否按运营商筛选 —— 光纤覆盖layer只有两个字段，fid和urban； SFA 字段有很多字段。
+地块唯一编号	后面汇总和Join使用 —— 有
+地区字段	能否筛选Wellington ——SFA有
+日期字段	理解数据时间 ——SFA有
+空值情况	初步数据质量检查 —— fibre图层，没有空值，有0；SFA 目前看起来有两个字段有，其他还不确定，因为数据量大，需要python查看。
