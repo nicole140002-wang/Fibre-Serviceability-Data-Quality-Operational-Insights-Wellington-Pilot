@@ -16,7 +16,9 @@
 <img width="1723" height="1259" alt="image" src="https://github.com/user-attachments/assets/917a75f2-6666-446d-8b0c-4b8c4b6d1695" />
 <img width="1075" height="1282" alt="image" src="https://github.com/user-attachments/assets/822376ab-b146-486e-bda2-a850f4b24f02" />
 
-# 2. 数据检查
+# 2. Chorus SFA Parcel and Published Fibre Coverage Consistency Audit Chorus指定光纤地块与公开光纤覆盖数据一致性审查
+#### 核心问题是：被SFA数据认定为Chorus可提供指定光纤服务的地块，是否与2025年6月30日的公开Fibre Coverage空间范围一致？
+#### 因为SFA当前版本使用了截至2025年11月7日的供应商信息，而Fibre Coverage时间是2025年6月30日，两套数据之间存在时间差，所以出现不一致并不一定是错误。
 内容包括以下:
 Geometry类型	Polygon还是MultiPolygon —— 看起来Fibre Coverages块更大，是multipolygon；SFA Parcels是每一个小块，是polygon类型
 CRS	是否都是EPSG:2193 —— 都是 EPSG:2193 - NZGD2000 / New Zealand Transverse Mercator 2000
