@@ -31,3 +31,22 @@ Provider字段	能否按运营商筛选 —— 光纤覆盖layer只有两个字�
 -> SFA图层是详细的地块级业务数据，有地块标识、供应商、评估日期和生效日期；
 -> Fibre Coverage图层只是技术覆盖范围，所以只保留内部编号和城乡分类，没有供应商字段。
 -> 因此，不能通过属性字段把两个图层直接连接，必须使用**空间叠加分析**。
+-> Fibre coverage 数据中的 fid	GeoPackage内部要素编号，通常没有业务分析价值；urban	城乡类别标志，通常1代表urban、0代表rural；它不是“是否有光纤”的字段
+-> SFA不是普通的“网络覆盖面”，而是监管意义上被认定已有指定光纤服务的地块。该认定与Chorus未来可以停止铜线服务有关，而且SFA数据明确包含地块、SFA名称和光纤服务提供商。
+-> 关于 SFA 属性字段的解读
+| 字段                 | 项目中的作用                   |
+| ------------------ | ------------------------ |
+| `id`               | SFA记录或地块的唯一编号            |
+| `appellation`      | 法定地块描述，例如Lot 3 DP 611167 |
+| `affected_surveys` | 相关测量图编号                  |
+| `parcel_intent`    | 地块权属或用途类型                |
+| `topology_type`    | 地块拓扑类型                   |
+| `land_district`    | 土地登记区                    |
+| `titles`           | 地契编号                     |
+| `survey_area`      | 测量面积                     |
+| `calc_area`        | GIS计算面积                  |
+| `provider`         | 光纤基础设施提供商                |
+| `date_assessed`    | 被评估为SFA的日期               |
+| `date_effective`   | SFA正式生效日期                |
+| `partial`          | 是否只有部分地块被认定为SFA          |
+| `sfa_name`         | SFA区域名称                  |
