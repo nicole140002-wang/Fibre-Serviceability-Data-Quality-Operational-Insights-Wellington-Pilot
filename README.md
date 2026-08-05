@@ -52,3 +52,46 @@ Provider字段	能否按运营商筛选 —— 光纤覆盖layer只有两个字�
 | `date_effective`   | SFA正式生效日期                |
 | `partial`          | 是否只有部分地块被认定为SFA          |
 | `sfa_name`         | SFA区域名称                  |
+
+# 3. 检查数据
+查看2个layer属性：
+（SFA）
+Geometry:Polygon (MultiPolygon) ;GEOMETRY COLUMN: geom
+CRS: EPSG:2193 - NZGD2000 / New Zealand Transverse Mercator 2000
+Feature count: 1,683,966
+Extent: 1175316.2560095430817455,4794485.4075714200735092 : 2081196.5831891379784793,6180548.9230163292959332
+
+确认至少存在：
+
+id √
+provider √
+partial √
+date_assessed √
+date_effective √
+sfa_name √
+calc_area √
+------------------------------------------------------------------------------------------------------
+（FIBRE COVERAGE）
+Geometry:Polygon (MultiPolygon) ;GEOMETRY COLUMN: geom
+CRS: EPSG:2193 - NZGD2000 / New Zealand Transverse Mercator 2000
+Feature count: 2,008
+Extent: 1175316.2999996240250766,4794485.4000005386769772 : 2081196.6000069910660386,6180548.8999982196837664
+确认字段是：
+fid √
+urban √
+其中urban = 0 的区块是：不代表没有光纤，只代表该光纤覆盖要素属于非城市类别。
+
+# 4. 建立研究区域
+建立两个边界：
+wellington_city_boundary
+wellington_study_area_500m
+其中：
+wellington_city_boundary用于最终统计和制图；
+wellington_study_area_500m用于提取数据，避免城市边界附近的地块或覆盖范围被意外截断。 
+数据下载： 从 Stats NZ Geographic Data Service 下载一个 Territorial Authority 边界数据，例如：
+Territorial Authority 2025
+找到其中值为：
+Wellington City
+创建500米缓冲区：
+<img width="1611" height="1267" alt="image" src="https://github.com/user-attachments/assets/134df2f7-face-486d-bd8e-3b3fd1dcf781" />
+
