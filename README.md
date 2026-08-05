@@ -154,4 +154,54 @@ A GEOS geometry validity assessment was performed on 65,623 Chorus-related SFA p
 fibre_coverage_wellington_dissolved，只有一个面状对象。
 <img width="1981" height="1483" alt="image" src="https://github.com/user-attachments/assets/e0643ae4-0c3b-44cf-89b2-468c2b823643" />
 
-# 11. 
+# 11. 计算SFA地块面积
+## Q1: 为什么还要计算面积？
+SFA已有 calc_area 字段，但我们仍新增：
+parcel_area_m2
+原因是：
+calc_area来自原始数据；
+parcel_area_m2由当前经过验证的几何重新计算；
+后面交集面积和地块面积都基于同一套QGIS几何，计算更一致；
+还可以比较两者，展示数据质量检查能力。
+经过计算的area和原来数据中的calc_area有很大的不同。对比见下图。
+轻微差异可能来自：
+数值取整；
+原始面积计算方法；
+几何精度；
+投影计算差异。
+<img width="2559" height="901" alt="image" src="https://github.com/user-attachments/assets/3dc0d4f2-c617-4279-90c0-ce9e18ba087b" />
+# 12. 创建稳定的 sfa_id
+从id得到该值，存入新的字段sfa_id
+
+# 13. 计算Fibre覆盖比例
+用 QGIS 的 Overlap analysis（重叠分析），比手动做 Intersection、汇总再连接更直接。它会保留全部 65,623 个 SFA 地块，并自动增加“重叠面积”和“重叠百分比”字段；没有覆盖的地块也不会丢失。
+qgis中太慢了，换成postgis做这部分overlap运算
+## 13.a 导入两个layer；
+## 13.b 下一步：给两个几何字段建立空间索引
+<img width="937" height="591" alt="image" src="https://github.com/user-attachments/assets/b36c9ba2-7a6e-418d-9b9e-96baa23f5e47" />
+查看新增索引是否成功：
+<img width="2193" height="764" alt="image" src="https://github.com/user-attachments/assets/d83814cd-7c2f-43b9-a792-2e00d687ddfa" />
+两张表的GiST索引成功创建后，下一步再运行 ST_Subdivide，把复杂的Fibre Polygon拆成小块。拆分后的几何外包矩形通常更小，可以减少空间索引产生的无关候选匹配。
+## 13.c 拆分Fibre覆盖面
+原始fibre 面的复杂度
+<img width="641" height="104" alt="image" src="https://github.com/user-attachments/assets/ac49f83f-31f1-458f-8f7b-125306bc5ffb" />
+原来没拆分之前的fibre，这都是一整块polygon（其实是multipolygon）
+<img width="1621" height="1279" alt="image" src="https://github.com/user-attachments/assets/43f5d52b-29c3-4b8b-98a5-31321116bf94" />
+拆分完之后，就变成2062个小块polygon了
+<img width="1611" height="1280" alt="image" src="https://github.com/user-attachments/assets/459b8b39-80bc-43e8-bf47-711cfc2b85d9" />
+这步完成后还要给拆分后的polygon图层添加空间索引 和主键：
+ALTER TABLE chorus_fibre.fibre_coverage_subdivided
+ADD CONSTRAINT fibre_coverage_subdivided_pk
+PRIMARY KEY (part_id);
+CREATE INDEX idx_fibre_coverage_subdivided_geom
+ON chorus_fibre.fibre_coverage_subdivided
+USING GIST (geom);
+ANALYZE chorus_fibre.fibre_coverage_subdivided;
+<img width="1104" height="211" alt="image" src="https://github.com/user-attachments/assets/275f4dde-6508-4522-a8be-fbbfcf24a9fe" />
+
+## 13.d 正式计算每个SFA地块的 overlap_area_m2 和 overlap_pct
+得到的覆盖面积和覆盖比例：
+<img width="481" height="1487" alt="image" src="https://github.com/user-attachments/assets/4bd1492b-36e4-4bda-b6e1-ec591ad67e58" />
+检查结果数量：
+<img width="892" height="759" alt="image" src="https://github.com/user-attachments/assets/63006b4f-ae91-41d5-8c2f-6bcb06e27159" />
+# 14.建立正式的审查分类
