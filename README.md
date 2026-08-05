@@ -178,6 +178,7 @@ parcel_area_m2由当前经过验证的几何重新计算；
 qgis中太慢了，换成postgis做这部分overlap运算
 ## 13.a 导入两个layer；
 ## 13.b 下一步：给两个几何字段建立空间索引
+创建主键索引和空间索引的作用是什么？？
 <img width="937" height="591" alt="image" src="https://github.com/user-attachments/assets/b36c9ba2-7a6e-418d-9b9e-96baa23f5e47" />
 查看新增索引是否成功：
 <img width="2193" height="764" alt="image" src="https://github.com/user-attachments/assets/d83814cd-7c2f-43b9-a792-2e00d687ddfa" />
@@ -205,3 +206,21 @@ ANALYZE chorus_fibre.fibre_coverage_subdivided;
 检查结果数量：
 <img width="892" height="759" alt="image" src="https://github.com/user-attachments/assets/63006b4f-ae91-41d5-8c2f-6bcb06e27159" />
 # 14.建立正式的审查分类
+现在把65,623块地分成：
+Aligned：基本完全匹配；
+Partial SFA – overlap found：原数据标记为部分SFA，且找到重叠；
+Partial overlap – review：普通地块只有部分重叠；
+No coverage match – review：完全没有覆盖匹配。
+## 14.A 创建覆盖率分类字段
+CASE
+    WHEN "overlap_pct" >= 99.5 THEN '99.5-100%'
+    WHEN "overlap_pct" >= 95   THEN '95-99.5%'
+    WHEN "overlap_pct" >= 50   THEN '50-95%'
+    WHEN "overlap_pct" > 0     THEN '0-50%'
+    WHEN "overlap_pct" = 0     THEN '0%'
+    ELSE 'NULL'
+END
+## 14.B 运行Statistics by categories
+<img width="2552" height="397" alt="image" src="https://github.com/user-attachments/assets/3bc563a7-8c4d-4246-b8fc-13d55b29de20" />
+## 14.C 直接制作分类地图
+
