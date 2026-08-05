@@ -114,3 +114,12 @@ Processing Toolbox
 先使用这个简单表达式：
 "provider" LIKE '%Chorus%' 该区域的所有地块都是chorus 提供的。
 <img width="1560" height="1289" alt="image" src="https://github.com/user-attachments/assets/f69fbdbf-d85e-48ae-9ed9-4af4cd6db8f2" />
+
+# 7. 提取Wellington范围内的Fibre Coverage
+## 7.A 修复Fibre Coverage几何
+因为在做fibre和边界intersect时候，报错： Feature (816) from “Fibre_Coverage_2025_RAW” has invalid geometry. Please fix the geometry or change the “Invalid features filtering” option for this input or globally in Processing settings.
+Execution failed after 0.14 seconds
+这个报错说明 Fibre Coverage 中第816号要素的多边形几何无效，所以 Extract by location 被中止了。
+## 7.B 重新提取Wellington Coverage
+图中亮粉色的部分是fibre跟sfa不同的部分。
+<img width="2264" height="1271" alt="image" src="https://github.com/user-attachments/assets/2b14a473-ed13-4edf-bca9-07d8876850f9" />
