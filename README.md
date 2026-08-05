@@ -123,3 +123,35 @@ Execution failed after 0.14 seconds
 ## 7.B 重新提取Wellington Coverage
 图中亮粉色的部分是fibre跟sfa不同的部分。
 <img width="2264" height="1271" alt="image" src="https://github.com/user-attachments/assets/2b14a473-ed13-4edf-bca9-07d8876850f9" />
+截图中右侧几个明显远离研究区的粉色多边形，很可能是因为：
+Fibre Coverage是 MultiPolygon；
+Extract by location只要一个MultiPolygon中的某一部分与研究区相交，就会保留该要素的全部组成部分；
+因此，同一个要素中位于研究区外的其他分离多边形也被一起提取了。
+所以接下来要先把Coverage真正裁剪到研究范围内。
+# 8.裁剪Fibre Coverage到研究区
+<img width="1314" height="1275" alt="image" src="https://github.com/user-attachments/assets/dc9da8f3-b950-4e94-af21-f73599dc8153" />
+## Q1: 为什么SFA不用Clip，而Coverage需要Clip
+SFA是地块数据，我们希望保留完整地块，避免改变地块面积。
+Fibre Coverage是连续覆盖范围，裁剪到研究区不会破坏地块含义，反而可以：
+删除无关的MultiPolygon组成部分；
+缩小处理范围；
+避免把研究区外的覆盖误认为“不一致”；
+让后面的面积计算更准确。
+
+# 9. 检查 Wellington Chorus SFA 的几何有效性
+在进行 Intersection 之前，确认：sfa_wellington_chorus 是否包含无效几何。
+
+这样你的项目可以记录：
+（1）检查了多少个地块；-修复前 65,623，修复后65,623 
+（2）发现多少个无效几何； 0
+（3）是否经过修复；No repair
+（4）后续分析使用的是经过验证的数据。 
+All Chorus-related SFA parcels in the pilot area passed the QGIS geometry validity check.
+A GEOS geometry validity assessment was performed on 65,623 Chorus-related SFA parcels. All records passed the validation, with no invalid geometries or geometry errors identified.
+# 10. 把 Wellington 的 Fibre Coverage 融合成一个总覆盖面。
+现在的 fibre_coverage_wellington_clip 由许多覆盖多边形组成。后面如果直接与65,623个SFA地块做 Intersection，重叠的Coverage要素可能使面积被重复统计。
+因此先把所有光纤覆盖多边形融合成一个整体：
+fibre_coverage_wellington_dissolved，只有一个面状对象。
+<img width="1981" height="1483" alt="image" src="https://github.com/user-attachments/assets/e0643ae4-0c3b-44cf-89b2-468c2b823643" />
+
+# 11. 
