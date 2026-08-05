@@ -95,3 +95,22 @@ Wellington City
 创建500米缓冲区：
 <img width="1611" height="1267" alt="image" src="https://github.com/user-attachments/assets/134df2f7-face-486d-bd8e-3b3fd1dcf781" />
 
+# 5. 提取Wellington范围内的SFA地块 一共65,623条记录
+3.4 为什么使用“相交”而不是Clip
+Extract by location会保留完整的原始地块。如果使用Clip，处于研究区边缘的地块会被500米缓冲区边界切断，从而改变：
+地块面积；
+几何形状；
+后续覆盖比例计算。
+因此现在保留完整地块更合适。
+<img width="1555" height="1276" alt="image" src="https://github.com/user-attachments/assets/dd11596b-5d8b-49f8-8922-9dfb89616746" />
+Wellington study-area SFA parcels: 65,623
+Chorus-related SFA parcels: 65,623
+# 6. 提取provider 是chorus的地块
+打开 Extract by expression
+进入：
+Processing Toolbox
+→ Vector selection
+→ Extract by expression
+先使用这个简单表达式：
+"provider" LIKE '%Chorus%' 该区域的所有地块都是chorus 提供的。
+<img width="1560" height="1289" alt="image" src="https://github.com/user-attachments/assets/f69fbdbf-d85e-48ae-9ed9-4af4cd6db8f2" />
